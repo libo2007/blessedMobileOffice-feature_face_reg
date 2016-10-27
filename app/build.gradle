@@ -34,4 +34,5 @@ android {
      compile files('libs/javacpp.jar')
      compile files('libs/javacv.jar')
      compile project(':openCVLibrary300')
+     compile files('libs/bugly_crash_release.jar')
  }

@@ -25,7 +25,7 @@ public class FdAuthCameraViewActivity extends BaseActivity {
 
         @Override
         public void onOrientationChanged(int orientation) {
-            MyLog.e(TAG, "onOrientationChanged: before:" + orientation);
+//            MyLog.e(TAG, "onOrientationChanged: before:" + orientation);
 
 
             if (orientation == OrientationEventListener.ORIENTATION_UNKNOWN) {
@@ -43,7 +43,7 @@ public class FdAuthCameraViewActivity extends BaseActivity {
             } else {
                 return;
             }
-            MyLog.e(TAG, "onOrientationChanged:" + orientation);
+//            MyLog.e(TAG, "onOrientationChanged:" + orientation);
         }
     }
 
@@ -56,7 +56,7 @@ public class FdAuthCameraViewActivity extends BaseActivity {
     public void initView() {
         setContentView(R.layout.activity_fd_auth_cameraview);
         new SetTopView(this, R.string.title_activity_face_collection, true);
-        orientationDetector = new MyOrientationDetector(this);
+//        orientationDetector = new MyOrientationDetector(this);
         getFragmentManager().beginTransaction().replace(R.id.fragment_container, new AuthPreviewFragment()).commit();
     }
 
@@ -71,12 +71,14 @@ public class FdAuthCameraViewActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         orientationDetector.enable();
+        MyLog.e(TAG, "onResume");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         orientationDetector.disable();
+        MyLog.e(TAG, "onDestroy");
     }
 
     @Override
@@ -87,6 +89,7 @@ public class FdAuthCameraViewActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MyLog.e(TAG, "onCreate");
     }
 
 
