@@ -61,6 +61,7 @@ public class RegisterFragment extends Fragment {
                         Intent itIdentityCardAct = new Intent(getActivity(), IdentityCardActivity.class);
                         itIdentityCardAct.putExtra(IntentExtra.EXTRA_TYPE, TypeConstant.TYPE_REG);
                         startActivity(itIdentityCardAct);
+//                        startActivity(new Intent(getActivity(),FdAuthCameraViewActivity.class));
                         break;
 
                     case R.id.btn_idcard_forget:

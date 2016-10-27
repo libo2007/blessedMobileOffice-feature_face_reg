@@ -16,7 +16,7 @@ import com.jiaying.workstation.utils.SetTopView;
  */
 public class FdAuthCameraViewActivity extends BaseActivity {
     private static final String TAG = "FdAuthCameraViewActivity";
-    private MyOrientationDetector orientationDetector;
+//    private MyOrientationDetector orientationDetector;
 
     public class MyOrientationDetector extends OrientationEventListener {
         public MyOrientationDetector(Context context) {
@@ -70,14 +70,14 @@ public class FdAuthCameraViewActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        orientationDetector.enable();
+//        orientationDetector.enable();
         MyLog.e(TAG, "onResume");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        orientationDetector.disable();
+//        orientationDetector.disable();
         MyLog.e(TAG, "onDestroy");
     }
 

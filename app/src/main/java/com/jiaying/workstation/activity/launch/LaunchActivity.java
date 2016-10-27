@@ -64,7 +64,8 @@ public class LaunchActivity extends BaseActivity {
         MobileofficeApp app = (MobileofficeApp) getApplication();
         app.initCrash();
         initDdataPreference();
-
+//        startActivity(new Intent(this,MainActivity.class));
+//        finish();
     }
 
     @Override

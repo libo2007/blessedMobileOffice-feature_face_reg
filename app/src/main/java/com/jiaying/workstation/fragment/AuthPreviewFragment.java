@@ -7,12 +7,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.cylinder.www.facedetect.FdAuthActivity;
 import com.jiaying.workstation.R;
+import com.jiaying.workstation.utils.MyLog;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class AuthPreviewFragment extends Fragment {
+    private static final String TAG = "AuthPreviewFragment";
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -24,7 +30,9 @@ public class AuthPreviewFragment extends Fragment {
 
     private FdAuthActivity fdAuthActivity;
 
-    private AuthenticationThread authenticationThread;
+    private Timer mTimer = null;
+    private TimerTask mTimerTask = null;
+
 
     private OnAuthFragmentInteractionListener mListener;
 
@@ -69,7 +77,7 @@ public class AuthPreviewFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_authentication, container, false);
-        authenticationThread = new AuthenticationThread();
+
         fdAuthActivity = new FdAuthActivity(this, 1);
         fdAuthActivity.onCreate(view);
         return view;
@@ -88,14 +96,15 @@ public class AuthPreviewFragment extends Fragment {
         if (fdAuthActivity != null) {
             fdAuthActivity.onResume();
         }
-        authenticationThread.start();
+        startChecksFaceAuth();
+
     }
 
     @Override
     public void onPause() {
         super.onPause();
 
-        authenticationThread.interrupt();
+
         if (fdAuthActivity != null) {
             fdAuthActivity.onPause();
         }
@@ -108,6 +117,7 @@ public class AuthPreviewFragment extends Fragment {
         if (fdAuthActivity != null) {
             fdAuthActivity.onStop();
         }
+        stopCheckFaceAuth();
     }
 
     @Override
@@ -133,39 +143,55 @@ public class AuthPreviewFragment extends Fragment {
         super.onDetach();
     }
 
-    private class AuthenticationThread extends Thread {
-        @Override
-        public void run() {
-            super.run();
-            while (!isInterrupted()) {
 
-                if (fdAuthActivity.isFaceAuthentication()) {
-
-                    Log.e("auth", "人脸通过");
-//                    MainActivity mainActivity = (MainActivity) getActivity();
-//
-//                    AuthPassFace.authFace = fdAuthActivity.getSimilarmRgba();
-//
-//                    mainActivity.getTabletStateContext().handleMessge(mainActivity.getRecordState(), mainActivity.getObservableZXDCSignalListenerThread(), null, null, RecSignal.AUTHPASS);
-
-                    break;
-                } else {
-                    Log.e("auth", "人脸未通过");
-                }
-                try {
-                    sleep(1000);
-                } catch (InterruptedException e) {
-                    //restore the interrupt status
-                    Thread.currentThread().interrupt();
-                }
-            }
-        }
-    }
 
     public interface OnAuthFragmentInteractionListener {
         // TODO: Update argument type and name
 //        void onAuthFragmentInteraction(RecSignal recSignal);
     }
 
+    private void startChecksFaceAuth() {
+        if(mTimerTask==null){
+            mTimerTask = new TimerTask() {
+                @Override
+                public void run() {
+                    if (getActivity() != null && !getActivity().isFinishing()) {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (fdAuthActivity.isFaceAuthentication()) {
 
+                                    MyLog.e(TAG, "人脸通过");
+//                    MainActivity mainActivity = (MainActivity) getActivity();
+//
+//                    AuthPassFace.authFace = fdAuthActivity.getSimilarmRgba();
+//
+//                    mainActivity.getTabletStateContext().handleMessge(mainActivity.getRecordState(), mainActivity.getObservableZXDCSignalListenerThread(), null, null, RecSignal.AUTHPASS);
+
+
+                                } else {
+                                    MyLog.e(TAG, "人脸未通过");
+                                }
+                            }
+                        });
+                    }
+                }
+            };
+        }
+        if(mTimer == null){
+            mTimer = new Timer();
+        }
+        mTimer.schedule(mTimerTask, 1000, 1000);
+    }
+
+    private void stopCheckFaceAuth(){
+        if(mTimerTask!=null){
+            mTimerTask.cancel();
+            mTimerTask=null;
+        }
+        if(mTimer !=null){
+            mTimer.cancel();
+            mTimer = null;
+        }
+    }
 }
